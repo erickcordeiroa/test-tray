@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('google_token');
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('document')->unique();
-            $table->date('birthdate');
+            $table->string('document')->nullable()->unique();
+            $table->date('birthdate')->nullable();
             $table->timestamps();
         });
 

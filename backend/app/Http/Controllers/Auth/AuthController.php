@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Google\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
@@ -19,7 +21,12 @@ class AuthController extends Controller
         $client->addScope('profile');
 
         $authUrl = $client->createAuthUrl();
-        return redirect($authUrl);
+        return response()->json(
+            [
+                'url' => $authUrl
+            ],
+            Response::HTTP_OK
+        );
     }
 
     public function handleGoogleCallback(Request $request)
@@ -32,6 +39,7 @@ class AuthController extends Controller
         $client->fetchAccessTokenWithAuthCode($request->code);
 
         $token = $client->getAccessToken();
+
         $oauth2 = new \Google\Service\Oauth2($client);
         $userInfo = $oauth2->userinfo->get();
 
@@ -44,6 +52,14 @@ class AuthController extends Controller
             ]
         );
 
-        return redirect('/cadastro')->with('user', $user);
+        //TODO: validar como melhorar essa opção;
+        echo "<script>
+                window.opener.postMessage(" . json_encode([
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'google_token' => $token['access_token']
+                    ]) . ", 'http://localhost:5173');
+                window.close();
+            </script>";
     }
 }
