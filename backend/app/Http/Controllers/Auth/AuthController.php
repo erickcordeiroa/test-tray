@@ -63,18 +63,13 @@ class AuthController extends Controller
 
         try {
             $userCallBack = $this->authService->handleGoogleCallback($request->code);
-            //TODO: SABER COMO MELHORAR ESSA PARTE
-            echo "<script>
-                    window.opener.postMessage(" . json_encode([
+            
+            // Passando os dados para a view que irá executar o JavaScript
+            return response()->view('popupClose', [
                 'name' => $userCallBack->name,
                 'email' => $userCallBack->email,
                 'google_token' => $userCallBack->google_token
-            ]) . ", 'http://localhost:5173');
-                    window.close();
-                </script>";
-
-            return;
-            // return response()->json(['user' => $userCallBack], Response::HTTP_OK);
+            ]);
         } catch (Exception $exception) {
             Log::error(
                 'Erro ao receber o callback do google',
