@@ -2,6 +2,10 @@
   <div class="container">
     <div class="table-wrapper">
       <h2 class="title">Lista de Usuários</h2>
+      <div class="filters">
+        <input type="text" v-model="filterName" placeholder="Filtrar por nome" @input="applyFilters" />
+        <input type="text" v-model="filterCPF" placeholder="Filtrar por CPF" @input="applyFilters" />
+      </div>
       <table class="user-table">
         <thead>
           <tr>
@@ -12,7 +16,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.id">
+          <tr v-for="user in filteredUsers" :key="user.id">
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
             <td>{{ formatDate(user.birthdate) }}</td>
@@ -32,10 +36,22 @@ export default {
   data() {
     return {
       users: [],
+      filterName: '',
+      filterCPF: '',
     };
   },
   created() {
     this.fetchUsers();
+  },
+  computed: {
+    filteredUsers() {
+      return this.users.filter(user => {
+        return (
+          (!this.filterName || user.name.toLowerCase().includes(this.filterName.toLowerCase())) &&
+          (!this.filterCPF || user.document.includes(this.filterCPF))
+        );
+      });
+    }
   },
   methods: {
     fetchUsers() {
@@ -46,6 +62,9 @@ export default {
         .catch(error => {
           console.error('Erro ao buscar usuários:', error);
         });
+    },
+    applyFilters() {
+      this.fetchUsers();
     },
     formatDate(date) {
       const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -77,6 +96,19 @@ export default {
   margin-bottom: 20px;
   font-size: 24px;
   font-weight: bold;
+}
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.filters input {
+  width: 48%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 
 .user-table {
