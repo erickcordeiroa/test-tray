@@ -1,43 +1,43 @@
 <template>
-  <div class="flex items-center justify-center h-screen bg-gray-100">
-    <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold text-center">Finalizar o Cadastro</h2>
+  <div class="container">
+    <div class="form-wrapper">
+      <h2>Finalizar o Cadastro</h2>
       <form @submit.prevent="handleRegister">
         <input
           v-model="name"
           type="text"
           placeholder="Nome"
-          class="w-full p-2 border rounded mb-4"
+          class="input-field"
           readonly
         />
         <input
           v-model="email"
           type="email"
           placeholder="Email"
-          class="w-full p-2 border rounded mb-4"
+          class="input-field"
           readonly
         />
         <input
           v-model="birthdate"
           type="date"
           placeholder="Data de Nascimento"
-          class="w-full p-2 border rounded mb-4"
+          class="input-field"
           required
         />
         <input
           v-model="document"
           type="text"
           placeholder="CPF"
-          class="w-full p-2 border rounded mb-4"
+          class="input-field"
           required
         />
-        <button type="submit" class="w-full p-2 text-white bg-blue-500 rounded">
+        <button type="submit" class="submit-button">
           Cadastrar
         </button>
       </form>
-      <p class="text-center">
+      <p class="login-link">
         Já tem conta?
-        <router-link to="/login" class="text-blue-500">Entrar</router-link>
+        <router-link to="/login">Entrar</router-link>
       </p>
     </div>
   </div>
@@ -90,3 +90,64 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.form-wrapper {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.login-link {
+  margin-top: 15px;
+}
+
+.login-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+</style>

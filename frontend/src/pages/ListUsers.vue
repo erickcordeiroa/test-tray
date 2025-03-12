@@ -1,22 +1,22 @@
 <template>
-  <div class="flex items-center justify-center h-screen bg-gray-100">
-    <div class="w-full max-w-4xl p-8 space-y-6 bg-gray-100 rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold text-center">Lista de Usuários</h2>
-      <table class="min-w-full">
+  <div class="container">
+    <div class="table-wrapper">
+      <h2 class="title">Lista de Usuários</h2>
+      <table class="user-table">
         <thead>
           <tr>
-            <th class="py-2 px-4 border-b">Nome</th>
-            <th class="py-2 px-4 border-b">Email</th>
-            <th class="py-2 px-4 border-b">Data de Nascimento</th>
-            <th class="py-2 px-4 border-b">CPF</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Data de Nascimento</th>
+            <th>CPF</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="user in users" :key="user.id">
-            <td class="py-2 px-4 border-b">{{ user.name }}</td>
-            <td class="py-2 px-4 border-b">{{ user.email }}</td>
-            <td class="py-2 px-4 border-b">{{ formatDate(user.birthdate) }}</td>
-            <td class="py-2 px-4 border-b">{{ user.document }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ formatDate(user.birthdate) }}</td>
+            <td>{{ user.document }}</td>
           </tr>
         </tbody>
       </table>
@@ -56,21 +56,49 @@ export default {
 </script>
 
 <style scoped>
-table {
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.table-wrapper {
+  width: 80%;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.user-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-th, td {
+.user-table th, .user-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
   text-align: left;
-  padding: 8px;
 }
 
-th {
-  background-color: #f2f2f2;
+.user-table th {
+  background-color: #f4f4f4;
 }
 
-tr:nth-child(even) {
+.user-table tr:nth-child(even) {
   background-color: #f9f9f9;
+}
+
+.user-table tr:hover {
+  background-color: #f1f1f1;
 }
 </style>

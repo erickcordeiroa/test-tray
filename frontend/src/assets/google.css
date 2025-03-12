@@ -23,11 +23,12 @@
     text-align: center;
     -webkit-transition: background-color .218s, border-color .218s, box-shadow .218s;
     transition: background-color .218s, border-color .218s, box-shadow .218s;
-    vertical-align: middle;
     white-space: nowrap;
     width: auto;
     max-width: 400px;
     min-width: min-content;
+    display: block;
+    margin: 0 auto;
   }
   
   .gsi-material-button .gsi-material-button-icon {
