@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axiosInstance from '../config/axiosConfig';
 
 export default {
   name: "ListUsers",
@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     fetchUsers() {
-      axios.get('http://localhost:8000/api/listar')
+      axiosInstance.get('/api/listar')
         .then(response => {
           this.users = response.data;
         })

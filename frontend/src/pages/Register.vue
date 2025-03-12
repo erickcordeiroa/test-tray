@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axiosInstance from '../config/axiosConfig';
 
 export default {
   name: "Register",
@@ -73,8 +73,8 @@ export default {
         google_token: this.token
       };
       
-      axios
-        .put("http://localhost:8000/api/register", userData, {
+      axiosInstance
+        .put("/api/register", userData, {
           headers: {
             "Content-Type": "application/json",
           },

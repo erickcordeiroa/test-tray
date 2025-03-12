@@ -36,13 +36,13 @@
 </template>
 
 <script setup lang="ts">
-import axios from "axios";
+import axiosInstance from '../config/axiosConfig.ts';
 
 const name = "ButtonGoogle";
 
 const loginWithGoogle = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/login');
+    const response = await axiosInstance.get('/login');
     const loginUrl = response.data.url;
 
     // Abrir um popup com a URL de login
