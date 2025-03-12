@@ -50,15 +50,14 @@ const loginWithGoogle = async () => {
 
     // Criar um listener para receber a resposta
     const handleMessage = (event: MessageEvent) => {
-      if (event.origin !== 'http://localhost:8000') return; // Confirme a origem correta
+      if (event.origin !== 'http://localhost:8000') return;
 
       const userData = event.data;
       if (userData && userData.google_token) {
-        window.removeEventListener('message', handleMessage); // Remover listener
-        popup?.close(); // Fechar o popup
+        window.removeEventListener('message', handleMessage);
+        popup?.close();
 
-        // Redirecionar para a tela de registro com os dados do usuário
-        window.location.href = `/register?name=${encodeURIComponent(userData.name)}&email=${encodeURIComponent(userData.email)}`;
+        window.location.href = `/register?name=${encodeURIComponent(userData.name)}&email=${encodeURIComponent(userData.email)}&token=${encodeURIComponent(userData.google_token)}`;
       }
     };
 

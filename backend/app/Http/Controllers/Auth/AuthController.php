@@ -55,11 +55,35 @@ class AuthController extends Controller
         //TODO: validar como melhorar essa opção;
         echo "<script>
                 window.opener.postMessage(" . json_encode([
-                        'name' => $user->name,
-                        'email' => $user->email,
-                        'google_token' => $token['access_token']
-                    ]) . ", 'http://localhost:5173');
+            'name' => $user->name,
+            'email' => $user->email,
+            'google_token' => $token['access_token']
+        ]) . ", 'http://localhost:5173');
                 window.close();
             </script>";
+    }
+
+    public function store(Request $request)
+    {
+        //TODO: Validar os campos se são validos ou não
+        $data = $request->only(['google_token', 'birthdate', 'document']);
+        $user = User::updateOrCreate([
+            'google_token' => $data['google_token']
+        ], [
+            'birthdate' => $data['birthdate'],
+            'document' => $data['document']
+        ]);
+
+        return response()->json([
+            'user' => $user
+        ], Response::HTTP_OK);
+    }
+
+    public function listar() {
+        $users = User::all();
+        return response()->json([
+            'users' => $users
+        ], Response::HTTP_OK);
+    
     }
 }
