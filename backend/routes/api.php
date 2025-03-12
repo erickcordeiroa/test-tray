@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/register', [AuthController::class, 'store'])->name('auth.register');
-Route::get('/listar', [AuthController::class, 'listar']);
+Route::put('/register', [UserController::class, 'update'])->name('auth.register');
+Route::get('/listar', [UserController::class, 'index']);

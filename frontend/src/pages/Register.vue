@@ -74,7 +74,7 @@ export default {
       };
       
       axios
-        .post("http://localhost:8000/api/register", userData, {
+        .put("http://localhost:8000/api/register", userData, {
           headers: {
             "Content-Type": "application/json",
           },

@@ -41,7 +41,7 @@ export default {
     fetchUsers() {
       axios.get('http://localhost:8000/api/listar')
         .then(response => {
-          this.users = response.data.users;
+          this.users = response.data;
         })
         .catch(error => {
           console.error('Erro ao buscar usuários:', error);
