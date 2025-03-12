@@ -11,12 +11,28 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class AuthController
+ *
+ * @package App\Http\Controllers
+ */
 class AuthController extends Controller
 {
 
+    /**
+     * AuthController constructor.
+     *
+     * @param AuthService $authService
+     */
     public function __construct(
         private readonly AuthService $authService
     ) {}
+
+    /**
+     * Redirect to Google authentication URL.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function redirectToGoogle()
     {
         try {
@@ -36,6 +52,12 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Handle Google callback.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|void
+     */
     public function handleGoogleCallback(Request $request)
     {
 
@@ -44,14 +66,14 @@ class AuthController extends Controller
             //TODO: SABER COMO MELHORAR ESSA PARTE
             echo "<script>
                     window.opener.postMessage(" . json_encode([
-                            'name' => $userCallBack->name,
-                            'email' => $userCallBack->email,
-                            'google_token' => $userCallBack->google_token
-                        ]) . ", 'http://localhost:5173');
+                'name' => $userCallBack->name,
+                'email' => $userCallBack->email,
+                'google_token' => $userCallBack->google_token
+            ]) . ", 'http://localhost:5173');
                     window.close();
                 </script>";
 
-                return;
+            return;
             // return response()->json(['user' => $userCallBack], Response::HTTP_OK);
         } catch (Exception $exception) {
             Log::error(

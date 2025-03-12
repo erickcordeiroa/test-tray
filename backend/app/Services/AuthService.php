@@ -5,10 +5,21 @@ namespace App\Services;
 use App\Interfaces\UserRepositoryInterface;
 use Google\Client;
 use Google\Service\Oauth2;
-use UserRepository;
 
+/**
+ * Update user information.
+ *
+ * @param Request $request
+ * @return \Illuminate\Http\JsonResponse
+ */
 class AuthService
 {
+    /**
+     * AuthService constructor.
+     *
+     * @param Client $googleClient
+     * @param UserRepositoryInterface $userRepository
+     */
     public function __construct(
         private readonly Client $googleClient,
         private readonly UserRepositoryInterface $userRepository
@@ -19,11 +30,22 @@ class AuthService
         $this->googleClient->addScope(['email', 'profile']);
     }
 
+    /**
+     * Create Google authentication URL.
+     *
+     * @return string
+     */
     public function createAuthUrl(): string
     {
         return $this->googleClient->createAuthUrl();
     }
 
+    /**
+     * Handle Google callback and store user information.
+     *
+     * @param string $code
+     * @return \App\Models\User
+     */
     public function handleGoogleCallback(string $code)
     {
         $this->googleClient->fetchAccessTokenWithAuthCode($code);
