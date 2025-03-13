@@ -48,6 +48,30 @@ class UserController extends Controller
     }
 
     /**
+     * Search users.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function search(Request $request)
+    {
+        try {
+            $data = $request->query('q');
+            $users = $this->userService->search($data);
+            return response()->json($users, Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error(
+                'Ocorreu um erro ao buscar os usuários',
+                ["ERROR" => $exception->getMessage()]
+            );
+
+            return response()->json([
+                'error' => 'Ocorreu um erro ao buscar os usuários'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
      * Update user information.
      *
      * @param Request $request

@@ -16,7 +16,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in filteredUsers" :key="user.id">
+          <tr v-for="user in users" :key="user.id">
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
             <td>{{ formatDate(user.birthdate) }}</td>
@@ -24,6 +24,11 @@
           </tr>
         </tbody>
       </table>
+      <div class="pagination">
+        <button @click="prevPage" :disabled="!pagination.prev_page_url">Anterior</button>
+        <span>Página {{ pagination.current_page }} de {{ pagination.last_page }}</span>
+        <button @click="nextPage" :disabled="!pagination.next_page_url">Próxima</button>
+      </div>
     </div>
   </div>
 </template>
@@ -38,37 +43,54 @@ export default {
       users: [],
       filterName: '',
       filterCPF: '',
+      pagination: {
+        current_page: 1,
+        last_page: 1,
+        prev_page_url: null,
+        next_page_url: null,
+      },
     };
   },
   created() {
     this.fetchUsers();
   },
-  computed: {
-    filteredUsers() {
-      return this.users.filter(user => {
-        return (
-          (!this.filterName || user.name.toLowerCase().includes(this.filterName.toLowerCase())) &&
-          (!this.filterCPF || user.document.includes(this.filterCPF))
-        );
-      });
-    }
-  },
   methods: {
-    fetchUsers() {
-      axiosInstance.get('/api/listar')
+    fetchUsers(pageUrl = '/api/listar') {
+      axiosInstance.get(pageUrl)
         .then(response => {
-          this.users = response.data;
+          this.users = response.data.data;
+          this.pagination = {
+            current_page: response.data.current_page,
+            last_page: response.data.last_page,
+            prev_page_url: response.data.prev_page_url,
+            next_page_url: response.data.next_page_url,
+          };
         })
         .catch(error => {
           console.error('Erro ao buscar usuários:', error);
         });
     },
     applyFilters() {
-      this.fetchUsers();
+      const query = [];
+      if (this.filterName) query.push(`q=${this.filterName}`);
+      if (this.filterCPF) query.push(`q=${this.filterCPF}`);
+      const queryString = query.length ? `?${query.join('&')}` : '';
+      
+      this.fetchUsers(queryString ? `/api/search${queryString}` : '/api/listar');
     },
     formatDate(date) {
       const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
       return new Date(date).toLocaleDateString('pt-BR', options);
+    },
+    prevPage() {
+      if (this.pagination.prev_page_url) {
+        this.fetchUsers(this.pagination.prev_page_url);
+      }
+    },
+    nextPage() {
+      if (this.pagination.next_page_url) {
+        this.fetchUsers(this.pagination.next_page_url);
+      }
     }
   },
 };
@@ -77,14 +99,15 @@ export default {
 <style scoped>
 .container {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   height: 100vh;
   background-color: #f0f0f0;
+  padding: 20px;
 }
 
 .table-wrapper {
-  width: 80%;
+  width: 100%;
   background: #fff;
   padding: 20px;
   border-radius: 10px;
@@ -132,5 +155,25 @@ export default {
 
 .user-table tr:hover {
   background-color: #f1f1f1;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
 }
 </style>

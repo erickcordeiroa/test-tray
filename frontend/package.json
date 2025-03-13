@@ -13,6 +13,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@kyvg/vue3-notification": "^3.4.1",
     "axios": "^1.8.3",
     "dotenv": "^16.4.7",
     "pinia": "^3.0.1",
