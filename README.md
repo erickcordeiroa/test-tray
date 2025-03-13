@@ -38,7 +38,7 @@ docker-compose up --build
 
 ### 5. Instalar dependências do Laravel
 ```sh
-docker-compose exec backend bash
+docker exec -it backend bash
 composer install
 php artisan key:generate
 php artisan migrate
