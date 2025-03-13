@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Interfaces\UserRepositoryInterface;
+use App\Interfaces\SendMailRepositoryInterface;
+use App\Models\User;
 use Exception;
 
 /**
@@ -16,10 +18,12 @@ class UserService
      * UserService constructor.
      *
      * @param UserRepositoryInterface $userRepository
+     * @param SendMailRepositoryInterface $sendMailRepository
      */
     public function __construct(
-        private readonly UserRepositoryInterface $userRepository)
-    {}
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly SendMailRepositoryInterface $sendMailRepository
+    ){}
 
     /**
      * List all users.
@@ -41,13 +45,18 @@ class UserService
      */
     public function update(array $attributes)
     {
-        $user = $this->userRepository->update($attributes);
-
-        if (is_null($user)) {
+        $response = $this->userRepository->update($attributes);
+        if (is_null($response)) {
             throw new Exception('Usuário não encontrado para atualização.');
         }
 
-        //TODO: COLOCAR O ENVIO DE E-MAIL PELA FILA AQUI
+        $user = $this->userRepository->getOne($attributes['google_token']);
+        $this->sendMail($user);
         return $user;
+    }
+
+    private function sendMail(User $user): void
+    {
+        $this->sendMailRepository->send($user);
     }
 }

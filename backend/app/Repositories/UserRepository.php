@@ -20,6 +20,11 @@ class UserRepository implements UserRepositoryInterface
         return User::all();
     }
 
+    public function getOne(string $googleToken): User
+    {
+        return User::where("google_token", $googleToken)->first();
+    }
+
     public function store(array $attributes): User
     {
         return User::updateOrCreate(
