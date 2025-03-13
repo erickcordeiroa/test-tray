@@ -1,39 +1,93 @@
+<script setup lang="ts">
+import { useUserStore } from "@/stores/userStore";
+import { onMounted } from "vue";
+import { notify } from "@kyvg/vue3-notification";
+import axiosInstance from '../config/axiosConfig';
+
+const userStore = useUserStore();
+
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const userData = {
+    name: urlParams.get("name") || "",
+    email: urlParams.get("email") || "",
+    birthdate: "",
+    document: "",
+    token: urlParams.get("token") || "",
+  };
+  userStore.setUser(userData);
+
+  const newUrl = window.location.origin + window.location.pathname;
+  window.history.replaceState({}, document.title, newUrl);
+});
+
+const handleRegister = () => {
+  const userData = {
+    name: userStore.name,
+    email: userStore.email,
+    birthdate: userStore.birthdate,
+    document: userStore.document,
+    google_token: userStore.token,
+  };
+
+  axiosInstance
+    .put("/api/register", userData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response) => {
+      notify({
+        title: "Sucesso",
+        text: "Cadastro realizado com sucesso!",
+        type: "success",
+      });
+      window.location.href = "/listar";
+    })
+    .catch((error) => {
+      notify({
+        title: "Erro",
+        text: "Erro ao cadastrar: " + (error.response.data.message || error.message),
+        type: "error",
+      });
+    });
+};
+</script>
+
 <template>
   <div class="container">
     <div class="form-wrapper">
       <h2>Finalizar o Cadastro</h2>
       <form @submit.prevent="handleRegister">
         <input
-          v-model="name"
+          v-model="userStore.name"
           type="text"
           placeholder="Nome"
           class="input-field"
           readonly
         />
         <input
-          v-model="email"
+          v-model="userStore.email"
           type="email"
           placeholder="Email"
           class="input-field"
           readonly
         />
         <input
-          v-model="birthdate"
+          v-model="userStore.birthdate"
           type="date"
           placeholder="Data de Nascimento"
           class="input-field"
           required
         />
         <input
-          v-model="document"
+          v-model="userStore.document"
           type="text"
           placeholder="CPF"
           class="input-field"
           required
         />
-        <button type="submit" class="submit-button">
-          Cadastrar
-        </button>
+        <button type="submit" class="submit-button">Cadastrar</button>
       </form>
       <p class="login-link">
         Já tem conta?
@@ -42,54 +96,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import axiosInstance from '../config/axiosConfig';
-
-export default {
-  name: "Register",
-  data() {
-    return {
-      name: "",
-      email: "",
-      birthdate: "",
-      document: "",
-      token: "",
-    };
-  },
-  created() {
-    const urlParams = new URLSearchParams(window.location.search);
-    this.name = urlParams.get("name") || "";
-    this.email = urlParams.get("email") || "";
-    this.token = urlParams.get("token") || "";
-  },
-  methods: {
-    handleRegister() {
-      const userData = {
-        name: this.name,
-        email: this.email,
-        birthdate: this.birthdate,
-        document: this.document,
-        google_token: this.token
-      };
-      
-      axiosInstance
-        .put("/api/register", userData, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          alert("Cadastro realizado com sucesso!");
-          window.location.href = "/listar";
-        })
-        .catch((error) => {
-          console.error("Erro ao cadastrar:", error);
-        });
-    },
-  },
-};
-</script>
 
 <style scoped>
 .container {
