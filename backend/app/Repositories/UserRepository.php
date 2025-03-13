@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -15,10 +15,30 @@ class UserRepository implements UserRepositoryInterface
         $this->model = new User();
     }
 
-    public function list(): Collection
+    public function list(): LengthAwarePaginator
     {
-        return User::all();
+        return User::select([
+            "email", 
+            "name", 
+            "document", 
+            "birthdate"
+        ])->paginate(15);
     }
+
+    public function search(string $search): LengthAwarePaginator
+    {
+        return User::select([
+            "email", 
+            "name", 
+            "document", 
+            "birthdate"
+        ])->when($search, function($query) use ($search) {
+            $query->orWhere('document', 'like', "%{$search}%");
+            $query->orWhere('name', 'like', "%{$search}%");
+        })
+        ->paginate(15);
+    }
+
 
     public function getOne(string $googleToken): User
     {

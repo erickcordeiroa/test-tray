@@ -6,6 +6,7 @@ use App\Interfaces\UserRepositoryInterface;
 use App\Interfaces\SendMailRepositoryInterface;
 use App\Models\User;
 use Exception;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
  * Class UserService
@@ -28,12 +29,21 @@ class UserService
     /**
      * List all users.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator;
      */
-    public function list()
+    public function list(): LengthAwarePaginator  
     {
-        //TODO: COLOCAR O FILTRO AQUI NESSE METODO
         return $this->userRepository->list();
+    }
+
+    /**
+     * Search users.
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator;
+     */
+    public function search(string $search): LengthAwarePaginator  
+    {
+        return $this->userRepository->search($search);
     }
 
     /**
