@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Interfaces\UserRepositoryInterface;
-use App\Interfaces\SendMailRepositoryInterface;
 use App\Models\User;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -19,11 +18,11 @@ class UserService
      * UserService constructor.
      *
      * @param UserRepositoryInterface $userRepository
-     * @param SendMailRepositoryInterface $sendMailRepository
+     * @param MailService $mailService
      */
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
-        private readonly SendMailRepositoryInterface $sendMailRepository
+        private readonly MailService $mailService
     ){}
 
     /**
@@ -61,12 +60,7 @@ class UserService
         }
 
         $user = $this->userRepository->getOne($attributes['google_token']);
-        $this->sendMail($user);
+        $this->mailService->sendMail($user);
         return $user;
-    }
-
-    private function sendMail(User $user): void
-    {
-        $this->sendMailRepository->send($user);
     }
 }

@@ -1,6 +1,7 @@
 # Projeto Laravel e Vue.js com Docker
 
 Este projeto é uma aplicação web utilizando Laravel no backend e Vue.js no frontend, configurada para rodar em contêineres Docker.
+Utilizado para realizar um teste técnico para a empresa tray, onde busquei utilizar todo o meu conhecimento sobre o framework laravel no backend, trazendo as melhores tecnicas de desenvolvimento como SOLID e alguns Design Patterns.
 
 ## Estrutura do Projeto
 
@@ -33,12 +34,12 @@ cp backend/.env.example backend/.env
 
 ### 4. Construir e iniciar os contêineres
 ```sh
-docker-compose up --build
+docker-compose up -d --build
 ```
 
 ### 5. Instalar dependências do Laravel
 ```sh
-docker-compose exec backend bash
+docker exec -it backend bash
 composer install
 php artisan key:generate
 php artisan migrate
@@ -46,4 +47,14 @@ php artisan db:seed
 ```
 
 
+### 6. URL para acessar o sistema
+```sh
+http://localhost:5173/login
+```
+
+### 7. Rodar a fila para enviar o e-mail
+```sh
+docker exec -it backend bash
+php artisan queue:work
+```
 
