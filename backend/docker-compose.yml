@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: user_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - traytest
+
+  backend:
+    image: tray-test
+    container_name: tray-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - tray_app_storage:/var/www/html/storage/app
+      - tray_logs:/var/www/html/storage/logs
+      - tray_sessions:/var/www/html/storage/framework/sessions
+    env_file:
+      - .env
+    ports:
+      - '${APP_PORT:-8000}:80'
+    depends_on:
+      - mysql
+    networks:
+      - traytest
+
+volumes:
+  tray_app_storage:
+  tray_logs:
+  tray_sessions:
+  mysql_data:
+
+networks:
+  traytest:
+    driver: bridge
+    

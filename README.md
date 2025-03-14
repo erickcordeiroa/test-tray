@@ -7,7 +7,6 @@ Utilizado para realizar um teste técnico para a empresa tray, onde busquei util
 
 - `backend/`: Contém o código do backend desenvolvido em Laravel.
 - `frontend/`: Contém o código do frontend desenvolvido em Vue.js.
-- `docker-compose.yml`: Arquivo de configuração do Docker Compose para orquestrar os contêineres.
 
 ## Pré-requisitos
 
@@ -23,29 +22,33 @@ git clone https://github.com/erickcordeiroa/test-tray.git
 cd test-tray
 ```
 
-### 2. Configurar variáveis de ambiente
+### 2. Configurar variáveis de ambiente (backend)
 ```sh
-cp backend/.env.example backend/.env
+cd backend/
+cp .env.example .env
 ```
+**Obs: Enviarei o env no corpo do e-mail com credenciais a serem utilizados**
 
-### 3. Inserir as configurações do Google no env
 
-*Informações enviadas no e-mail*
-
-### 4. Construir e iniciar os contêineres
+### 4. Construir e iniciar o container backend
 ```sh
 docker-compose up -d --build
 ```
 
 ### 5. Instalar dependências do Laravel
 ```sh
-docker exec -it backend bash
+docker exec -it tray-test bash
 composer install
 php artisan key:generate
 php artisan migrate
 php artisan db:seed
 ```
 
+### 6. Construir e iniciar o container frontend
+```sh
+cd frontend/
+docker-compose up -d --build
+```
 
 ### 6. URL para acessar o sistema
 ```sh
@@ -54,7 +57,7 @@ http://localhost:5173/login
 
 ### 7. Rodar a fila para enviar o e-mail
 ```sh
-docker exec -it backend bash
+docker exec -it tray-test bash
 php artisan queue:work
 ```
 
