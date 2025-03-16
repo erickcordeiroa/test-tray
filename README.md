@@ -44,10 +44,11 @@ php artisan migrate
 php artisan db:seed
 ```
 
-### 6. Construir e iniciar o container frontend
+### 6. Construir e iniciar o frontend
 ```sh
 cd frontend/
-docker-compose up -d --build
+npm install
+npm run dev
 ```
 
 ### 6. URL para acessar o sistema
